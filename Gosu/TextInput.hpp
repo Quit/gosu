@@ -64,6 +64,18 @@ namespace Gosu
         {
             return textIn;
         }
+
+        #if defined(GOSU_IS_WIN)
+        //! Overridable function that is called every time the text is changed.
+        virtual void changed() const
+        {
+        }
+
+        //! Overridable function that is called every time Gosu::kbReturn is pressed.
+        virtual void returned() const
+        {
+        }
+        #endif
     };
 }
 

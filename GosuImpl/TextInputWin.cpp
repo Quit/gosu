@@ -33,8 +33,8 @@ std::wstring Gosu::TextInput::text() const
 
 void Gosu::TextInput::setText(const std::wstring& text)
 {
-	pimpl->text = text;
-	pimpl->caretPos = pimpl->selectionStart = text.length();
+  pimpl->text = text;
+  pimpl->caretPos = pimpl->selectionStart = text.length();
 }
 
 unsigned Gosu::TextInput::caretPos() const
@@ -78,11 +78,12 @@ bool Gosu::TextInput::feedMessage(unsigned long message, unsigned long wparam, u
         pimpl->text.insert(pimpl->text.begin() + CARET_POS, filteredText.begin(), filteredText.end());
         CARET_POS += filteredText.length();
         SEL_START = CARET_POS;
+        changed();
         return true;
     }
 
     bool ctrlDown	= (GetKeyState(VK_CONTROL) < 0);
-	bool shiftDown	= (GetKeyState(VK_SHIFT) < 0);
+    bool shiftDown	= (GetKeyState(VK_SHIFT) < 0);
 
     // Char left
     if (message == WM_KEYDOWN && wparam == VK_LEFT && !ctrlDown)
@@ -182,6 +183,7 @@ bool Gosu::TextInput::feedMessage(unsigned long message, unsigned long wparam, u
             SEL_START = CARET_POS;
         }
 
+        changed();
         return true;
     }
 
@@ -204,7 +206,14 @@ bool Gosu::TextInput::feedMessage(unsigned long message, unsigned long wparam, u
             SEL_START = CARET_POS = oldCaret;
         }
 
+        changed();
         return true;
+    }
+
+    // Returned.
+    if (message == WM_KEYDOWN && wparam == VK_RETURN) {
+      returned();
+      return true;
     }
 
     return false;
