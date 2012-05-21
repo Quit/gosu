@@ -106,9 +106,9 @@ unsigned Gosu::Font::flags() const
     return pimpl->flags;
 }
 
-double Gosu::Font::textWidthDefined(const wstring& text, unsigned flags, double factorX) const
+double Gosu::Font::textWidthDefined(const wstring& text, int b, int u, int i, double factorX) const
 {
-    FormattedString fs(text.c_str(), flags);
+    FormattedString fs(text.c_str(), 0, b, u, i);
     double result = 0;
     for (unsigned i = 0; i < fs.length(); ++i)
     {
@@ -120,7 +120,7 @@ double Gosu::Font::textWidthDefined(const wstring& text, unsigned flags, double 
 }
 
 double Gosu::Font::textWidth(const wstring& text, double factorX) const {
-  return textWidthDefined(text, flags(), factorX);
+  return textWidthDefined(text, (flags() & ffBold) ? 1 : 0, (flags() & ffUnderline) ? 1 : 0, (flags() & ffItalic) ? 1 : 0);
 }
 
 void Gosu::Font::draw(const wstring& text, double x, double y, ZPos z,
