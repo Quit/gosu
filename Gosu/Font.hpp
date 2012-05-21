@@ -46,7 +46,7 @@ namespace Gosu
         
         //! Returns the width, in pixels, the given text with those flags
         //! would occupy if drawn.
-        double textWidthDefined(const std::wstring& text, unsigned flags, double factorX = 1.0) const;
+        double textWidthDefined(const std::wstring& text, int bold = 0, int underline = 0, int italic = 0, double factorX = 1.0) const;
 
         //! Draws text so the top left corner of the text is at (x; y).
         //! \param text Formatted text without line-breaks.
