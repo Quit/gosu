@@ -36,7 +36,7 @@ namespace Gosu
     // that no clipping should happen.
     struct ClipRect
     {
-        int x, y, width, height;
+        double x, y, width, height;
         
         bool operator==(const ClipRect& other) const
         {
@@ -47,8 +47,6 @@ namespace Gosu
         }
     };
 }
-
-#include <GosuImpl/Graphics/RenderState.hpp>
 
 namespace Gosu
 {
@@ -66,12 +64,6 @@ namespace Gosu
         GLuint color;
         GLfloat vertices[3];
     };
-    struct VertexArray
-    {
-        RenderState renderState;
-        std::vector<ArrayVertex> vertices;
-    };
-    typedef std::list<VertexArray> VertexArrays;
     
     template<typename T>
     bool isPToTheLeftOfAB(T xa, T ya,
