@@ -2,8 +2,16 @@ namespace :linux do
   LINUX_FILES = COMMON_CPP_FILES +
                 COMMON_RUBY_FILES +
                 FileList['Gosu', 'GosuImpl',
-                  'linux/configure', 'linux/configure.ac',
-                  'linux/Makefile.in']
+                  'cmake/CMakeLists.txt',
+                  'cmake/GosuConfig.cmake.in',
+                  'cmake/gosu.pc.in',
+                  'cmake/CMakeLists.txt.in',
+                  'cmake/build.sh',
+                  'cmake/create_deb_package.sh',
+                  'cmake/create_tgz_package.sh',
+                  'cmake/Packaging.cmake',
+                  'cmake/GosuImpl.cmake',
+                  ]
   LINUX_FILES.uniq!
 
   LINUX_ARCHIVE_FILENAME = "pkg/gosu-linux-#{GOSU_VERSION}.tar.gz"
@@ -28,6 +36,9 @@ namespace :linux do
     s.platform = 'ruby'
     s.files = COMMON_RUBY_FILES
     s.files += FileList['GosuImpl/**/*', 'linux/extconf.rb']
+    # For building the gem on OS X
+    s.files += FileList['dependencies/libogg/**/*', 'dependencies/libvorbis/**/*', 'dependencies/ogg_vorbis.license']
+    
     s.extensions = ['linux/extconf.rb']
     s.requirements = ['See https://github.com/jlnr/gosu/wiki/Getting-Started-on-Linux']
   end
