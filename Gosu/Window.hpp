@@ -100,6 +100,9 @@ namespace Gosu
         HWND handle() const;
         virtual LRESULT handleMessage(UINT message, WPARAM wparam,
             LPARAM lparam);
+        //! Creates a command line console. stdout, stdin and stderr will be
+        //! redirected to that console.
+        void createConsole();
         #endif
         
         #ifdef GOSU_IS_UNIX

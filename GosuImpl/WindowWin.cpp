@@ -518,6 +518,16 @@ LRESULT Gosu::Window::handleMessage(UINT message, WPARAM wparam, LPARAM lparam)
     return DefWindowProc(handle(), message, wparam, lparam);
 }
 
+void Gosu::Window::createConsole() {
+  // Create the console.
+  if (!AllocConsole())
+    Win::throwLastError("creating a console");
+  // Redirect IO.
+  std::freopen("CONOUT$", "wt", stdout);
+  std::freopen("CONOUT$", "wt", stderr);
+  std::freopen("CONIN$", "rt", stdin);
+}
+
 // Deprecated.
 
 class Gosu::Audio {};
