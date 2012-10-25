@@ -434,6 +434,7 @@ LRESULT Gosu::Window::handleMessage(UINT message, WPARAM wparam, LPARAM lparam)
 {
     if (message == WM_SETCURSOR)
     {
+      try {
         if (LOWORD(lparam) != HTCLIENT || GetForegroundWindow() != handle() || needsCursor())
         {
             static const HCURSOR arrowCursor = LoadCursor(0, IDC_ARROW);
@@ -442,6 +443,9 @@ LRESULT Gosu::Window::handleMessage(UINT message, WPARAM wparam, LPARAM lparam)
         else
             SetCursor(NULL);
         return TRUE;
+      } catch (std::exception& e) {
+        panic(e);
+      }
     }
 
     if (message == WM_SETFOCUS && graphics().fullscreen() && IsWindowVisible(pimpl->handle))
