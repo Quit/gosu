@@ -256,11 +256,11 @@ Gosu::Window::Window(unsigned width, unsigned height, bool fullscreen,
     
     if (!fullscreen)
     {
-      double factor = std::min(0.9 * screenWidth() / width,
-                               0.8 * screenHeight() / height);
-      
-      if (factor < 1)
-        width *= factor, height *= factor;
+        double factor = std::min(0.9 * screenWidth() / width,
+                                 0.8 * screenHeight() / height);
+        
+        if (factor < 1)
+            width *= factor, height *= factor;
     }
 
     // Determine the size the window needs to have including UI chrome.
@@ -368,22 +368,20 @@ void Gosu::Window::show()
                 if (input().mouseX() >= 0 && input().mouseY() >= 0)
                     SendMessage(handle(), WM_SETCURSOR, reinterpret_cast<WPARAM>(handle()), HTCLIENT);
                 update();
-                
                 if (needsRedraw())
                 {
                     ::InvalidateRect(handle(), 0, FALSE);
                     FPS::registerFrame();
                 }
-                
                 // There probably should be a proper "oncePerTick" handler
                 // system in the future. Right now, this is necessary to give
                 // timeslices to Ruby's green threads in Ruby/Gosu.
                 if (GosusDarkSide::oncePerTick) GosusDarkSide::oncePerTick();
-          }
-          else if (pimpl->updateInterval - (ms - lastTick) > 5)
-              // More than 5 ms left until next update: Sleep to reduce
-              // processur usage, Sleep() is accurate enough for that.
-              Sleep(5);
+            }
+            else if (pimpl->updateInterval - (ms - lastTick) > 5)
+                // More than 5 ms left until next update: Sleep to reduce
+                // processur usage, Sleep() is accurate enough for that.
+                Sleep(5);
         }
     }
     catch (...)
@@ -400,7 +398,7 @@ void Gosu::Window::close()
         ChangeDisplaySettings(NULL, CDS_FULLSCREEN);
 }
 
-void Gosu::Window::panic(std::exception& e)
+void Gosu::Window::panic(const std::exception& e)
 {
   // Show the message to the user.
   ::MessageBoxA(0, e.what(), "Panic", MB_OK | MB_ICONERROR);
@@ -434,20 +432,24 @@ HWND Gosu::Window::handle() const
 
 LRESULT Gosu::Window::handleMessage(UINT message, WPARAM wparam, LPARAM lparam)
 {
-  if (message == WM_SETCURSOR)
+    if (message == WM_SETCURSOR)
     {
-      try {
-        if (LOWORD(lparam) != HTCLIENT || GetForegroundWindow() != handle() || needsCursor())
+        try
         {
-            static const HCURSOR arrowCursor = LoadCursor(0, IDC_ARROW);
-            SetCursor(arrowCursor);
+            if (LOWORD(lparam) != HTCLIENT || GetForegroundWindow() != handle() || needsCursor())
+            {
+                static const HCURSOR arrowCursor = LoadCursor(0, IDC_ARROW);
+                SetCursor(arrowCursor);
+            }
+            else
+                SetCursor(NULL);
+            return TRUE;
         }
-        else
-            SetCursor(NULL);
-        return TRUE;
-      } catch (std::exception& e) {
-        panic(e);
-      }
+        catch (std::exception& e)
+        {
+            panic(e);
+            // If panic() returns normally, we will fall through to DefWindowProc.
+        }
     }
 
     if (message == WM_SETFOCUS && graphics().fullscreen() && IsWindowVisible(pimpl->handle))
